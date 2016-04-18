@@ -62,7 +62,24 @@ public class MyArrayList<E> implements List<E> {
 		if (index < 0 || index > size) {
 			throw new IndexOutOfBoundsException();
 		}
-		// TODO: fill in the rest of this method
+		// if adding an element to the end of the array, e.g. index == size
+		// use the other add method
+		if (index == size) {
+			add(element);
+			return;
+		} else {
+			int tempSize = size - index;
+			add(element);
+			System.arraycopy(array, index, array, index+1, tempSize);
+			array[index] = element;
+		}
+		/*
+
+		E[] tempArray = (E[]) new Object[tempSize];
+		System.arraycopy(array, index, tempArray, 0, tempSize);
+		array[index] = element;
+		System.arraycopy(tempArray, 0, array, index+1, tempSize);
+		*/
 	}
 
 	@Override
@@ -174,7 +191,7 @@ public class MyArrayList<E> implements List<E> {
 		return Arrays.asList(copy).listIterator(index);
 	}
 
-	@Override
+	@Override 
 	public boolean remove(Object obj) {
 		int index = indexOf(obj);
 		if (index == -1) {
@@ -186,8 +203,13 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E remove(int index) {
-		// TODO: fill in this method.
-		return null;
+		E returnValue = array[index];
+		int tempSize = size - index;
+		E[] tempArray = (E[]) new Object[tempSize];
+		System.arraycopy(array, index+1, tempArray, 0, tempSize);
+		System.arraycopy(tempArray, 0, array, index, tempSize);
+		size--;
+		return returnValue;
 	}
 
 	@Override
@@ -206,7 +228,7 @@ public class MyArrayList<E> implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
-		if (index < 0 || index > size) {
+		if (index < 0 || index >= size) {
 			throw new IndexOutOfBoundsException();
 		}
 		E temp = array[index];
